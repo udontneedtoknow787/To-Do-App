@@ -34,11 +34,6 @@ function App() {
         return <Todocard key={t.id} todo={t} />
       })
     }
-    {
-      todos.map(function(t){
-        return <Todocard key={t.id} todo={t} />
-      })
-    }
     <br />
   <button onClick={Chagetodo} className='bg-red-700 hover:bg-red-400 active:bg-green-800 border-8 border-b-blue-900 border-r-blue-900'>Change todo list </button>
   {console.log(todos)}
