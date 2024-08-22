@@ -6,9 +6,15 @@ function App() {
   const [todos, setTodo] = useState([]);
   //  METHOD 1 FOR USEEFFECT
   async function Chagetodo() {
-    const res = await axios.get("https://sum-server.100xdevs.com/todos");
-    setTodo(res.data.todos);
+  try {
+      const res = await axios.get("https://sum-server.100xdevs.com/todos");
+      setTodo(res.data.todos);
+    } catch (error) {
+      console.log("server not responding!!!")
+      alert("Server not Responding!!")
+    }
   }
+  
   // Chagetodo();
   // useEffect(()=>{Chagetodo();},[]);
 
@@ -22,7 +28,6 @@ function App() {
   // },[])
 
   return (<>
-    {/* <div>Hello world again.</div> */}
     <h1>To-Do List below: </h1>
     {
       todos.map(function(t){
