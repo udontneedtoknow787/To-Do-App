@@ -50,7 +50,8 @@ router.get('/all', async function(req, res){
 });
 
 const updateSchema = zod.object({
-    title: zod.string()
+    title: zod.string(),
+    completed: zod.boolean()
 });
 
 router.post('/update', async function(req, res){
@@ -71,7 +72,7 @@ router.post('/update', async function(req, res){
         const response = await ToDo.updateOne({
             title: req.body.title
         },{
-            "$set": {completed: true}
+            "$set": {completed: req.body.completed}
         });
         if(response) return res.json({
             message: "succesfully updated"
