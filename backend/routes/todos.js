@@ -8,6 +8,14 @@ const todoSchema = zod.object({
     description: zod.string(),
     completed: zod.boolean()
 });
+const updateSchema = zod.object({
+    title: zod.string(),
+    description: zod.string().optional(),
+    completed: zod.boolean().optional()
+});
+const deleteSchema = zod.object({
+    title: zod.string()
+});
 
 router.post('/', async function(req, res){
     const newtodo = req.body;
@@ -49,12 +57,6 @@ router.get('/all', async function(req, res){
     return res.json(alltodos);
 });
 
-const updateSchema = zod.object({
-    title: zod.string(),
-    description: zod.string().optional(),
-    completed: zod.boolean().optional()
-});
-
 router.post('/update', async function(req, res){
     const result = updateSchema.safeParse(req.body);
     if(!result.success){
@@ -89,10 +91,6 @@ router.post('/update', async function(req, res){
         })
     }
 });
-
-const deleteSchema = zod.object({
-    title: zod.string()
-})
 
 router.post('/delete', async function(req, res){
     const response = deleteSchema.safeParse(req.body)
