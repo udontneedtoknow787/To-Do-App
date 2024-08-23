@@ -53,22 +53,39 @@ const updateSchema = zod.object({
     title: zod.string()
 });
 
-// router.put('/update', async function(req, res){
-//     const result = updateSchema.safeParse(req.body);
-//     if(!result.success){
-//         return res.status(401).json({
-//             message: "Invalid Input!!"
-//         });
-//     }
-//     const todo = await ToDo.findOne({
-//         title: req.body.title
-//     });
-//     if(todo){
-//         await ToDo.updaateOne({
-//             title: todo.title
-//         },)
-//     }
-// });
+router.post('/update', async function(req, res){
+    const result = updateSchema.safeParse(req.body);
+    if(!result.success){
+        return res.status(401).json({
+            message: "Invalid Input!!"
+        });
+    }
+    const todo = await ToDo.findOne({
+        title: req.body.title
+    });
+    // if(todo) return res.json({
+    //     message: "todo found!"
+    // })
+    if(todo){
+        // console.log("todo found");
+        const response = await ToDo.updateOne({
+            title: req.body.title
+        },{
+            "$set": {completed: true}
+        });
+        if(response) return res.json({
+            message: "succesfully updated"
+        });
+        else return res.status(403).json({
+            message: "found the ToDo, but couldn't update !!"
+        });
+    }
+    else{
+        res.status(403).json({
+            message: "Todo not found!!"
+        })
+    }
+});
 
 module.exports = router
 
