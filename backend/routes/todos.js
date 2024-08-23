@@ -51,7 +51,8 @@ router.get('/all', async function(req, res){
 
 const updateSchema = zod.object({
     title: zod.string(),
-    completed: zod.boolean()
+    description: zod.string().optional(),
+    completed: zod.boolean().optional()
 });
 
 router.post('/update', async function(req, res){
@@ -72,7 +73,8 @@ router.post('/update', async function(req, res){
         const response = await ToDo.updateOne({
             title: req.body.title
         },{
-            "$set": {completed: req.body.completed}
+            "$set": {completed: req.body.completed},
+            "$set": {completed: req.body.description}
         });
         if(response) return res.json({
             message: "succesfully updated"
@@ -87,6 +89,41 @@ router.post('/update', async function(req, res){
         })
     }
 });
+
+const deleteSchema = zod.object({
+    title: zod.string()
+})
+
+router.post('/delete', async function(req, res){
+    const response = deleteSchema.safeParse(req.body)
+    if(!response.success){
+        res.json({
+            message: "wrong Input recieved"
+        })
+    }
+    const todo = await ToDo.findOne({title: req.body.title})
+    if (todo) {
+        try {
+            await ToDo.deleteOne({
+                title: req.body.title
+            });
+            return res.json({
+                message: "Todo deleted succesfully"
+            })
+        }
+        catch (err) {
+            return res.status(405).json({
+                message: "something wrong happend during deleting process"
+            })
+        }
+    }
+    else{
+        return res.json({
+            message: "todo does not exist"
+        })
+    }  
+});
+
 
 module.exports = router
 
